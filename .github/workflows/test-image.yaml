@@ -1,0 +1,14 @@
+---
+name: Lint docker image
+on:
+  [pull_request,push]
+
+jobs:
+  test-docker:
+    name: Lint docker image
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Lint Dockerfile
+        uses: brpaz/hadolint-action@master
