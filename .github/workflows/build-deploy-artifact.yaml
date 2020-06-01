@@ -1,0 +1,47 @@
+---
+name: Build Deploy Artifact
+on:
+  push
+
+jobs:
+  patch-deploy:
+    name: Build Deploy Artifact
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with: 
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Get git sha short
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Generate deploy artifact from Jinja template
+        uses: cuchi/jinja2-action@v1.1.0
+        with: 
+          template: tmpl/hello-deploy.j2 
+          output_file: deploy/hello-deploy.yaml
+          strict: true
+          variables: |
+            image_deploy_tag=${{ steps.vars.outputs.sha_short }}
+
+      - name: Generate deploy artifact from Jinja template
+        uses: cuchi/jinja2-action@v1.1.0
+        with: 
+          template: tmpl/hello-service.j2 
+          output_file: deploy/hello-service.yaml
+          strict: true
+
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Generate deployment manifests" -a
+            
+      - name: Generate deploy from template
+        uses: ad-m/github-push-action@master
+        with: 
+          github_token: ${{ secrets.AUTO_COMMIT_TOKEN }}
+
