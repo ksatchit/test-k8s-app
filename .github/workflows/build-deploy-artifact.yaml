@@ -6,6 +6,7 @@ on:
 jobs:
   patch-deploy:
     name: Build Deploy Artifact
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -25,7 +26,7 @@ jobs:
           output_file: deploy/hello-deploy.yaml
           strict: true
           variables: |
-            image_deploy_tag=${{ steps.vars.outputs.sha_short }}
+            image_deploy_tag=sha-${{ steps.vars.outputs.sha_short }}
 
       - name: Generate deploy artifact from Jinja template
         uses: cuchi/jinja2-action@v1.1.0
@@ -39,7 +40,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -s -m "Generate deployment manifests" 
+          git commit -s -m "[skip-ci] Generate deployment manifests" 
             
       - name: Generate deploy from template
         uses: ad-m/github-push-action@master
