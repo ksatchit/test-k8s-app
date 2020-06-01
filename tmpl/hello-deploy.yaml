@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: test-app
-          image: ksatchit/test-k8s-app:sha-85db82e
+          image: ksatchit/test-k8s-app:{{ image_deploy_tag }} 
           ports:
             - containerPort: 8080
  
