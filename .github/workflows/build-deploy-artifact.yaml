@@ -38,7 +38,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Generate deployment manifests" -a
+          git add .
+          git commit -s -m "Generate deployment manifests" 
             
       - name: Generate deploy from template
         uses: ad-m/github-push-action@master
