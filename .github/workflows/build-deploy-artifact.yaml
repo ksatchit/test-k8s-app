@@ -15,6 +15,10 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Create shared artefact path
+        run: |
+          mkdir -p /var/tmp/manifests
+
       - name: Get git sha short
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
@@ -28,12 +32,6 @@ jobs:
           variables: |
             image_deploy_tag=sha-${{ steps.vars.outputs.sha_short }}
 
-      - name: Upload deploy artifact for reuse
-        uses: actions/upload-artifact@v1
-        with: 
-          name: deploy_manifest
-          path: hello-deploy.yaml
-
       - name: Generate service manifest from Jinja template
         uses: cuchi/jinja2-action@v1.1.0
         with: 
@@ -41,11 +39,15 @@ jobs:
           output_file: deploy/hello-service.yaml
           strict: true
 
-      - name: Upload service artifact for reuse
+      - name: Place generated manifests into shared artefact path
+        run: | 
+          cp deploy/*.yaml /var/tmp/manifests
+
+      - name: Upload deploy and service artefacts for reuse
         uses: actions/upload-artifact@v1
         with: 
-          name: service_manifest
-          path: hello-service.yaml
+          name: app-manifests
+          path: /var/tmp/manifests
 
       - name: Commit deploy manifest on local repo 
         run: |
@@ -61,6 +63,7 @@ jobs:
   
   push-manifests-to-flux-managed-repo:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    needs: patch-manifests
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -76,18 +79,14 @@ jobs:
       - name: Download saved deploy artifact
         uses: actions/download-artifact@v1
         with:
-          name: deploy_manifest
-
-      - name: Download saved service artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: service_manifest
+          name: app-manifests
+          path: /var/tmp/manifests
 
       - name: Copy manifests to deploy folder of managed repo 
         run: |
           ls test-k8s-deploy/
-          cp hello-deploy.yaml cp test-k8s-deploy/test-k8s-app/.
-          cp hello-service.yaml cp test-k8s-deploy/test-k8s-app/.
+          cp /var/tmp/manifests/hello-deploy.yaml cp test-k8s-deploy/test-k8s-app/.
+          cp /var/tmp/manifests/hello-service.yaml cp test-k8s-deploy/test-k8s-app/.
 
       - name: Commit deploy manifest on local repo 
         run: |
