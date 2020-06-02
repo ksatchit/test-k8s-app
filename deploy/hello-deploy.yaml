@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: test-app
-          image: ksatchit/test-k8s-app:sha-4c28e43 
+          image: ksatchit/test-k8s-app:sha-74b9346 
           ports:
             - containerPort: 8080
  
