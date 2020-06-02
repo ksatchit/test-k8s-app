@@ -101,7 +101,8 @@ jobs:
       - name: Push deploy manifests to local repo
         uses: ad-m/github-push-action@master
         with: 
-          github_token: ${{ secrets.REMOTE_COMMIT_TOKEN }}
+          #github_token: ${{ secrets.REMOTE_COMMIT_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ksatchit/test-k8s-deploy
          
   
