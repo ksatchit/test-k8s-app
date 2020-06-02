@@ -90,8 +90,8 @@ jobs:
 
       - name: Commit deploy manifest on local repo 
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
           git add .
           git commit -s -m "[skip ci] Copy deployment manifests from source" 
             
