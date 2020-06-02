@@ -88,6 +88,10 @@ jobs:
           cp /var/tmp/manifests/hello-deploy.yaml test-k8s-deploy/test-k8s-app/.
           cp /var/tmp/manifests/hello-service.yaml test-k8s-deploy/test-k8s-app/.
 
+      - name: Enter repo to prepare for push to remote repo
+        run: |
+          cd test-k8s-deploy
+
       - name: Commit deploy manifest on local repo 
         run: |
           git config user.email "action@github.com"
