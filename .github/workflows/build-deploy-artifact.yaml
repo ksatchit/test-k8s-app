@@ -89,20 +89,24 @@ jobs:
           cp /var/tmp/manifests/hello-deploy.yaml test-k8s-deploy/test-k8s-app/.
           cp /var/tmp/manifests/hello-service.yaml test-k8s-deploy/test-k8s-app/.
 
-      - name: Commit deploy manifest on local repo 
+      - name: Commit deploy manifest on remote repo 
         run: |
           cd test-k8s-deploy
           ls -al
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
           git add .
-          git commit -s -m "[skip ci] Copy deployment manifests from source" 
+          git commit -s -m "[skip ci] Copy deployment manifests from source"
+          git push https://$USERNAME:$REPO_KEY@github.com/ksatchit/test-k8s-deploy.git master 
+        env:
+          REPO_KEY: ${{ secrets.AUTO_COMMIT_TOKEN }}
+          USERNAME: github-actions 
             
-      - name: Push deploy manifests to local repo
-        uses: ad-m/github-push-action@master
-        with: 
+      #- name: Push deploy manifests to local repo
+      #  uses: ad-m/github-push-action@master
+      #  with: 
           #github_token: ${{ secrets.REMOTE_COMMIT_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ksatchit/test-k8s-deploy
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    repository: ksatchit/test-k8s-deploy
          
   
