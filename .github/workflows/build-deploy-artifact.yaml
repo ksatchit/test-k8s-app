@@ -96,7 +96,8 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
           git add .
-          git commit -s -m "[skip ci] Copy deployment manifests from source"
+          #git commit -s -m "[skip ci] Copy deployment manifests from source"
+          git commit -s -m "Copy deployment manifests from source"
           git push https://$USERNAME:$REPO_KEY@github.com/ksatchit/test-k8s-deploy.git master 
         env:
           REPO_KEY: ${{ secrets.AUTO_COMMIT_TOKEN }}
