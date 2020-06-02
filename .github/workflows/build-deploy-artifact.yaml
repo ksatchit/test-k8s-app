@@ -85,8 +85,8 @@ jobs:
       - name: Copy manifests to deploy folder of managed repo 
         run: |
           ls test-k8s-deploy/
-          cp /var/tmp/manifests/hello-deploy.yaml cp test-k8s-deploy/test-k8s-app/.
-          cp /var/tmp/manifests/hello-service.yaml cp test-k8s-deploy/test-k8s-app/.
+          cp /var/tmp/manifests/hello-deploy.yaml test-k8s-deploy/test-k8s-app/.
+          cp /var/tmp/manifests/hello-service.yaml test-k8s-deploy/test-k8s-app/.
 
       - name: Commit deploy manifest on local repo 
         run: |
