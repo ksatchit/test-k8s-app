@@ -17,6 +17,7 @@ jobs:
 
       - name: Create shared artefact path
         run: |
+          ls -al
           mkdir -p /var/tmp/manifests
 
       - name: Get git sha short
